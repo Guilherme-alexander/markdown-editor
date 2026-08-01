@@ -22,6 +22,7 @@ class MarkdownEditor(QMainWindow):
         # Configuração da janela principal
         self.setWindowTitle("Markdown Editor") # Visualizador e Editor
         self.setGeometry(100, 100, 1200, 700)
+        self.setWindowIcon(QIcon(self.get_icon_path()))
         
         # Configurar perfil WebEngine para permitir imagens
         profile = QWebEngineProfile.defaultProfile()
@@ -38,8 +39,7 @@ class MarkdownEditor(QMainWindow):
         self.preview.settings().setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
         self.preview.settings().setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
         self.preview.settings().setAttribute(QWebEngineSettings.ErrorPageEnabled, False)
-
-        # Preview do Markdown (setHtml)
+        
         self.preview.setHtml("""<h2 style="color: #666; text-align: center; margin-top: 50px;">
                               Preview do Markdown</h2>
                               <p style="text-align: center; color: #999;">O conteúdo aparecerá aqui</p>""")
@@ -57,7 +57,7 @@ class MarkdownEditor(QMainWindow):
         splitter = QSplitter(Qt.Horizontal)
         splitter.addWidget(self.editor)
         splitter.addWidget(self.preview)
-        splitter.setSizes([400, 600]) # <-- SIZE (X Y)
+        splitter.setSizes([400, 600])
         
         main_layout.addWidget(splitter)
         
@@ -70,6 +70,14 @@ class MarkdownEditor(QMainWindow):
         self.apply_style()
         self.update_preview()
         
+    def get_icon_path(self):
+        """Retorna o caminho absoluto do ícone, funcionando também quando empacotado"""
+        if hasattr(sys, '_MEIPASS'):  # executando via PyInstaller
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(base_path, "markdown.ico")
+
     def create_menu_bar(self):
         menubar = self.menuBar()
         
@@ -393,7 +401,7 @@ class MarkdownEditor(QMainWindow):
         try:
             markdown_text = self.editor.toPlainText()
             
-            # GitHub CSS estilo
+            # CSS estilo GitHub
             if self.is_dark_mode:
                 # Dark mode - estilo GitHub Dark
                 css = """
@@ -654,7 +662,6 @@ class MarkdownEditor(QMainWindow):
             html_content = self.fix_image_urls(html_content)
             
             # HTML completo
-            # configs: lang="pt-br" or lang="us"
             full_html = f"""
             <!DOCTYPE html>
             <html>
@@ -950,6 +957,9 @@ def main():
     app = QApplication(sys.argv)
     app.setApplicationName("Markdown Editor")
     app.setApplicationDisplayName("Markdown Editor")
+
+    icon_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "markdown.ico")
+    app.setWindowIcon(QIcon(icon_path))  # <-- adicionar
     
     window = MarkdownEditor()
     window.show()
