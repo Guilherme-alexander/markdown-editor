@@ -97,6 +97,8 @@ markdown-editor/
 └── README.md            # Este arquivo
 ```
 
+![Markdown_Editor.png](https://github.com/Guilherme-alexander/markdown-editor/blob/main/Markdown_Editor.png)
+
 ## 🤝 Contribuindo
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir uma *issue* ou enviar um *pull request* com melhorias, correções de bugs ou novas funcionalidades.
